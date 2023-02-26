@@ -4,10 +4,12 @@ const connectDatabase =()=>{
         (data)=>{
             console.log(`mongodb is connected on ${data.connection.host}`)  
         }
-    ).catch((err)=>{
-       console.log(err);
-     }
     )
+    // we have no need of catch block because we handle this error in unhandled promise rejaction 
+    // .catch((err)=>{
+    //     console.log(err);
+    //   }
+    //  )
 }
 
 module.exports = connectDatabase;
