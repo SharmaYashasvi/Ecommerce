@@ -32,15 +32,25 @@ class ApiFeatures{
       removeFields.forEach((key) => delete queryCopy[key]);
 
       // filter for rating & price
-      let queryStr = JSON.stringify(queryCopy);
+      let queryStr = JSON.stringify(queryCopy); // queryCopy is an object conver it to string to manupulate
       queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g , key => `$${key}`);
       //   console.log(queryCopy);
      // fiding in database
-      this.query = this.query.find(JSON.parse(queryStr));
+      this.query = this.query.find(JSON.parse(queryStr)); // reconversion from string to obj
       return this;
       // this filter feature is case senstive but we will handel it in frontend
    }
-
+  
+   // for paginintion function
+   pagination(resultPerPage){
+        // givin currentpage 
+        const currentPage = Number(this.querystr.page) || 1;
+        // calculation how many item should b skip
+        const skip = resultPerPage * (currentPage -1);
+        //put limit & skip the products
+        this.query = this.query.limit(resultPerPage).skip(skip);
+        return this;
+   }
 };
 
 module.exports = ApiFeatures;
