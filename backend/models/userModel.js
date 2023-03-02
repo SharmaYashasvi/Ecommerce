@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
+// for incryption of password
+const bcrypt = require("bcryptjs");
 const userSchema = mongoose.Schema({
       name:{
         type:String,
@@ -17,7 +19,7 @@ const userSchema = mongoose.Schema({
       password:{
         type:String,
         required:[true,"Please Enter The Password"],
-        minLenght:[8,"Pass Should Be Greater Than 8 char"],
+        minLength:[8,"Pass Should Be Greater Than 8 char"],
         select:false
       },
       avatar:{
@@ -37,6 +39,16 @@ const userSchema = mongoose.Schema({
 
     resetPasswordToken: String,
     resetPasswordExpire: Date,
+})
+
+// pass encryption here before saving function will run
+userSchema.pre("save",async function(next){  // we not use arrow ()=> function beacuse we not able to use this keyword in arrow fun. // so we use fuction() keyword
+     // check if pass modifide or not if not modifide skip the hashing/bcryption
+      if(!this.isModified("password")){
+          next();
+      }  
+      // encryption using bcrypt library
+      this.password =  await bcrypt.hash(this.password,10);                          
 })
 
 module.exports = mongoose.model("User",userSchema);
