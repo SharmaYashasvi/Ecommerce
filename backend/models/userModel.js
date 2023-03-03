@@ -3,6 +3,10 @@ const validator = require("validator");
 
 // for incryption of password
 const bcrypt = require("bcryptjs");
+
+// for jwt token
+const jwt = require("jsonwebtoken");
+
 const userSchema = mongoose.Schema({
       name:{
         type:String,
@@ -49,6 +53,18 @@ userSchema.pre("save",async function(next){  // we not use arrow ()=> function b
       }  
       // encryption using bcrypt library
       this.password =  await bcrypt.hash(this.password,10);                          
-})
+});
+
+// JWT Token
+userSchema.methods.getJWTToken = function(){
+    return jwt.sign({id:this._id},process.env.JWT_SECRET,{
+       expiresIn:process.env.JWT_EXPIRE,
+    });
+};
+
+// for password compare 
+userSchema.methods.comparePassword = async function(enteredPassword){
+        return await bcrypt.compare(enteredPassword,this.password); // by using compare method of bcrypt we compare enterpass & mainpass
+}
 
 module.exports = mongoose.model("User",userSchema);

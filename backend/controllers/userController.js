@@ -14,8 +14,45 @@ exports.registerUser = catchAsyncErrors(async(req,res,next)=>{
         }
        });
 
+       const token = user.getJWTToken();
+
        res.status(201).json({
         succes:true,
-        user
+        token,
        });
 });
+
+// login user function
+exports.loginUser = catchAsyncErrors(async (req,res,next)=>{
+        const {email ,password} = req.body;
+
+        // checking both email or pass filled by the user or not
+        if(!email || !password){
+            return next(new ErrorHandler("Please Enter The Email & Password",400));
+        }
+        
+        // finding in database
+        const user = await User.findOne({email:email}).select("+password");
+        
+        // if user not found
+        if(!user){
+            return next(new ErrorHandler("Invalid Email Or Password",401));
+        }
+
+        // compare the password
+        const isPasswordMatched = await user.comparePassword(password);
+
+        // if pass not matched
+        if(!isPasswordMatched){
+            return next(new ErrorHandler("Invalid Email Or Password",401));
+        }
+
+        // if Matched
+        const token = user.getJWTToken();
+
+       res.status(201).json({
+        succes:true,
+        token,
+       });
+
+})
