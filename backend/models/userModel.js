@@ -7,6 +7,8 @@ const bcrypt = require("bcryptjs");
 // for jwt token
 const jwt = require("jsonwebtoken");
 
+// crypto is a inbuild module what we use in reset function
+const crypto = require("crypto");
 const userSchema = mongoose.Schema({
       name:{
         type:String,
@@ -66,5 +68,8 @@ userSchema.methods.getJWTToken = function(){
 userSchema.methods.comparePassword = async function(enteredPassword){
         return await bcrypt.compare(enteredPassword,this.password); // by using compare method of bcrypt we compare enterpass & mainpass
 }
+
+// pass reset genrating link
+
 
 module.exports = mongoose.model("User",userSchema);

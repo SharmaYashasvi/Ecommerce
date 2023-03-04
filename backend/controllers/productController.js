@@ -5,6 +5,9 @@ const ApiFeatures = require("../utils/apifeatures");
 const { query } = require("express");
 // create product
 exports.createProduct = catchAsyncErrors(async(req,res,next)=>{
+  req.body.user = req.user.id; // koi bhi product kisne banaya isko store karwa rhe hai idhar
+  // hamne user karke ek field banaya database mai wo jab req se aaya tho usko excess kia req.body.user se or usmai khudh 
+  // se value dali jo ki hamne store karwa li thi login ke time req.user.id mai
   const product = await Product.create(req.body);
   res.status(201).json({
       success:true,

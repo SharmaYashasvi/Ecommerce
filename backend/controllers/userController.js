@@ -1,6 +1,7 @@
 const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const User = require("../models/userModel");
+const sendToken = require("../utils/jwtToken");
 
 // register a user
 
@@ -14,12 +15,7 @@ exports.registerUser = catchAsyncErrors(async(req,res,next)=>{
         }
        });
 
-       const token = user.getJWTToken();
-
-       res.status(201).json({
-        succes:true,
-        token,
-       });
+      sendToken(user,201,res);
 });
 
 // login user function
@@ -48,11 +44,29 @@ exports.loginUser = catchAsyncErrors(async (req,res,next)=>{
         }
 
         // if Matched
-        const token = user.getJWTToken();
+    //     const token = user.getJWTToken();
 
-       res.status(201).json({
-        succes:true,
-        token,
-       });
+    //    res.status(201).json({
+    //     succes:true,
+    //     token,
+    //    });
 
+    // code reduction because we made function in utils
+    sendToken(user,200,res);
+
+});
+
+// Logout function
+exports.logoutUser = catchAsyncErrors(async(req,res,next)=>{
+    
+    res.cookie("token",null,{
+        expires: new Date(Date.now()),
+        httpOnly:true
+    })
+
+
+    res.status(201).json({
+        success:true,
+        message:"Logged Out"
+    })
 })
