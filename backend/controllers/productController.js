@@ -51,7 +51,7 @@ exports.getProductDetails = catchAsyncErrors(async(req,res,next)=>{
    res.status(200).json({
     success:true,
     product,
-    productCount
+    // productCount
   })
 })
 
@@ -110,3 +110,49 @@ exports.deleteProduct = catchAsyncErrors(async (req,res,next)=>{
   })
 
 });
+
+ // create product review
+ exports.createProductReview = catchAsyncErrors(async(req,res,next)=>{
+  const {rating , comment , productId} = req.body;  // get values of rating comment and productId from body
+
+  const review = {  // creating review
+    user:req.user._id,  // giving id 
+    name:req.user.name,  // name
+    rating: Number(rating), // rating
+    comment // comment
+  }
+
+  const product = await Product.findById(productId); // finding product exixts or not 
+
+  if(!product){ // if not found
+    return next(new ErrorHandler(`Product not found with id ${productId}`,404))
+  }
+   
+  // found but already reviewed by any user then only update it
+  const isReviewed = product.reviews.find((rev)=> rev.user.toString() === req.user._id.toString()); // checking if user already review it
+  if(isReviewed){ // if yes
+    product.reviews.forEach((rev)=>{  //check and find it 
+      if(rev.user.toString() === req.user._id.toString()) 
+      (rev.rating=rating),(rev.comment = comment); // update rating or comment but no. of reviews are same
+    })
+  }
+  else{  //if no
+     product.reviews.push(review); // push new review in reviews model
+     product.numOfReviews = product.reviews.length; // and update no. of reviews 
+  }
+
+  let avg = 0;
+   product.reviews.forEach((rev)=>{ // calculate the avg
+     avg += rev.rating;
+   });
+
+    product.ratings = avg / product.reviews.length;
+    // save all stuff
+   await product.save({
+    validateBeforeSave:false
+   })
+
+   res.status(200).json({
+    success:true
+   })
+ })
