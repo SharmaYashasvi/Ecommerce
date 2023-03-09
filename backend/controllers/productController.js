@@ -18,16 +18,22 @@ exports.createProduct = catchAsyncErrors(async(req,res,next)=>{
 // get all product
 exports.getAllProducts = catchAsyncErrors(async (req,res)=>{
   // call apifeatures function give 2 parameters 1st is querey 2nd is keyword
-  const resultPerPage = 5;
-  const productCount = await Product.countDocuments();
+  const resultPerPage = 8;
+  const productsCount = await Product.countDocuments();
   const apifeatures = new ApiFeatures(Product.find(),req.query)
   .search() // for searching
   .filter() // for filtering
-  .pagination(resultPerPage); // for pagination
-  const products = await apifeatures.query; 
+
+  let products = await apifeatures.query;
+  let filteredProductCount = products.length;
+
+  apifeatures.pagination(resultPerPage); // for pagination
+   products = await apifeatures.query; 
   res.status(200).json({
       success:true,
-      products
+      products,
+      productsCount,
+      filteredProductCount
   });
 });
 
