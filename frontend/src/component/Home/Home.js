@@ -1,16 +1,21 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment ,useEffect} from "react";
 import { CgMouse } from 'react-icons/cg'; // importing the cg mouse
 import "./Home.css";
 import ProductCard from "./ProductCard.js";
 import MetaData from "../layout/MetaData";
+import { getProduct } from "../../actions/productAction";
+import { useSelector, useDispatch } from "react-redux";
 
-const product = {
-    name:"Blue Tshirt",
-     image:"url",
-    price:"2000",
-    _id:"bsjkabih"
-}
+
 const Home = () => {
+  // const alert = useAlert();
+  const dispatch = useDispatch();
+ const { loading, error, products } = useSelector((state) => state.products);
+
+  useEffect(() => {
+     dispatch(getProduct());
+  }, [dispatch]);
+
   return (
     <Fragment>
          
@@ -30,14 +35,10 @@ const Home = () => {
           <h2 className="homeHeading">Featured Products</h2>
           
           <div className="container" id="container">
-               <ProductCard product = {product}/>
-               <ProductCard product = {product}/>
-               <ProductCard product = {product}/>
-               <ProductCard product = {product}/>
-               <ProductCard product = {product}/>
-               <ProductCard product = {product}/>
-               <ProductCard product = {product}/>
-               <ProductCard product = {product}/>
+          {products &&
+              products.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
           </div>
 
     </Fragment>

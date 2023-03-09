@@ -47,5 +47,7 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "allowedHosts": "all",
+  "proxy": "http://192.168.108.88:4000"
 }
