@@ -16,6 +16,32 @@ exports.createProduct = catchAsyncErrors(async(req,res,next)=>{
 });
 
 // get all product
+
+// exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
+//   const resultPerPage = 8;
+//   const productsCount = await Product.countDocuments();
+
+//   const apiFeature = new ApiFeatures(Product.find(), req.query)
+//     .search()
+//     .filter();
+
+//   let products = await apiFeature.query;
+
+//   let filteredProductsCount = products.length;
+
+//   apiFeature.pagination(resultPerPage);
+
+//   products = await apiFeature.query;
+
+//   res.status(200).json({
+//     success: true,
+//     products,
+//     productsCount,
+//     resultPerPage,
+//     filteredProductsCount,
+//   });
+// });
+
 exports.getAllProducts = catchAsyncErrors(async (req,res,next)=>{
   // call apifeatures function give 2 parameters 1st is querey 2nd is keyword
   const resultPerPage = 8;
@@ -23,12 +49,14 @@ exports.getAllProducts = catchAsyncErrors(async (req,res,next)=>{
   const apifeatures = new ApiFeatures(Product.find(),req.query)
   .search() // for searching
   .filter() // for filtering
-  .pagination(resultPerPage); // for pagination
-  const  products = await apifeatures.query; 
+  .pagination(resultPerPage);
+  const products = await apifeatures.query;
   res.status(200).json({
       success:true,
       products,
       productsCount,
+      resultPerPage,
+      // filteredProductsCount
   });
 });
 
