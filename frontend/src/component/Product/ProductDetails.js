@@ -12,7 +12,7 @@ import "./ProductDetails.css";
 import Loader from "../layout/Loader/Loader";
 import { useAlert } from "react-alert";
 import MetaData from "../layout/MetaData";
-// import { addItemsToCart } from "../../actions/cartAction";
+import { addItemsToCart } from "../../actions/cartAction";
 // import {
 //   Dialog,
 //   DialogActions,
@@ -65,7 +65,7 @@ const ProductDetails = ({ match }) => {
 
 
   const addToCartHandler = () => {
-    // dispatch(addItemsToCart(match.params.id, quantity));
+     dispatch(addItemsToCart(match.params.id, quantity));
     alert.success("Item Added To Cart");
   };
 

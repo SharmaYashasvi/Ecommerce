@@ -1,4 +1,5 @@
 import './App.css';
+import { useEffect, useState } from "react";
 import Header from "./component/layout/Header/Header.js"
 import { BrowserRouter as Router ,Route} from 'react-router-dom';
 import WebFont from "webfontloader";
@@ -19,8 +20,24 @@ import UpdateProfile from "./component/User/UpdateProfile";
 import UpdatePassword from "./component/User/UpdatePassword";
 import ForgotPassword from "./component/User/ForgotPassword";
 import ResetPassword from "./component/User/ResetPassword";
+import Cart from "./component/Cart/Cart";
+import Shipping from "./component/Cart/Shipping";
+import ConfirmOrder from "./component/Cart/ConfirmOrder";
+import axios from "axios";
+import Payment from "./component/Cart/Payment";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 function App() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
+
+  const [stripeApiKey, setStripeApiKey] = useState("");
+
+  async function getStripeApiKey() {
+    const { data } = await axios.get("/api/v1/stripeapikey");
+
+    setStripeApiKey(data.stripeApiKey);
+  }
+
   // for loading google fonts
   React.useEffect(() => {
     WebFont.load({
@@ -29,6 +46,7 @@ function App() {
       },
     });
     store.dispatch(loadUser());
+    getStripeApiKey();
   }, []);
 
   return (
@@ -40,9 +58,10 @@ function App() {
       <Route exact path="/products" component={Products} />
       <Route exact path="/search" component={Search} />
       <Route path="/products/:keyword" component={Products} />
-      <Route exact path="/login" component={LoginSignUp} />
+      
       <ProtectedRoute exact path="/account" component={Profile} />
       <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
+      
       <ProtectedRoute
           exact
           path="/password/update"
@@ -50,6 +69,15 @@ function App() {
         />
       <Route exact path="/password/forgot" component={ForgotPassword} />
       <Route exact path="/password/reset/:token" component={ResetPassword} />
+      <Route exact path="/login" component={LoginSignUp} />
+      <Route exact path="/cart" component={Cart} />
+      <ProtectedRoute exact path="/shipping" component={Shipping} />
+      <ProtectedRoute exact path="/order/confirm" component={ConfirmOrder} />
+
+      <Elements stripe = {loadStripe(stripeApiKey)}>
+      <ProtectedRoute exact path="/process/payment" component={Payment} />
+      </Elements>
+      
       <Footer/>
     </Router>
   );
