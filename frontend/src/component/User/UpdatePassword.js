@@ -39,7 +39,7 @@ const UpdatePassword = ({ history }) => {
     }
 
     if (isUpdated) {
-      alert.success("Profile Updated Successfully");
+      alert.success("Password Updated Successfully");
 
       history.push("/account");
 

@@ -2,12 +2,12 @@ import React, { Fragment, useRef, useState, useEffect } from "react";
 import "./LoginSignUp.css";
 import Loader from "../layout/Loader/Loader";
 import { Link } from "react-router-dom";
-// import MailOutlineIcon from "@material-ui/icons/MailOutline";
- import { EmailIcon, LockIcon } from '@chakra-ui/icons'
- import { FaUserAlt } from 'react-icons/fa';
+ import MailOutlineIcon from "@material-ui/icons/MailOutline";
+//  import { EmailIcon, LockIcon } from '@chakra-ui/icons'
+//  import { FaUserAlt } from 'react-icons/fa';
 
-// import LockOpenIcon from "@material-ui/icons/LockOpen";
-// import FaceIcon from "@material-ui/icons/Face";
+ import LockOpenIcon from "@material-ui/icons/LockOpen";
+ import FaceIcon from "@material-ui/icons/Face";
 import { useDispatch, useSelector } from "react-redux";
  import { clearErrors, login, register } from "../../actions/userAction";
 import { useAlert } from "react-alert";
@@ -122,7 +122,8 @@ const LoginSignUp = ({history}) => {
               </div>
               <form className="loginForm" ref={loginTab} onSubmit={loginSubmit}>
                 <div className="loginEmail">
-                  <EmailIcon />
+                  {/* <EmailIcon /> */}
+                  <MailOutlineIcon />
                   <input
                     type="email"
                     placeholder="Email"
@@ -132,7 +133,8 @@ const LoginSignUp = ({history}) => {
                   />
                 </div>
                 <div className="loginPassword">
-                  <LockIcon />
+                  {/* <LockIcon /> */}
+                  <LockOpenIcon />
                   <input
                     type="password"
                     placeholder="Password"
@@ -151,7 +153,7 @@ const LoginSignUp = ({history}) => {
                  onSubmit={registerSubmit}
               >
                 <div className="signUpName">
-                  <FaUserAlt />
+                  <FaceIcon />
                   <input
                     type="text"
                     placeholder="Name"
@@ -162,8 +164,8 @@ const LoginSignUp = ({history}) => {
                   />
                 </div>
                 <div className="signUpEmail">
-                  {/* <MailOutlineIcon /> */}
-                  <EmailIcon />
+                  <MailOutlineIcon />
+                  {/* <EmailIcon /> */}
                   <input
                     type="email"
                     placeholder="Email"
@@ -174,8 +176,8 @@ const LoginSignUp = ({history}) => {
                   />
                 </div>
                 <div className="signUpPassword">
-                  {/* <LockOpenIcon /> */}
-                  <LockIcon />
+                  <LockOpenIcon />
+                  {/* <LockIcon /> */}
                   <input
                     type="password"
                     placeholder="Password"

@@ -92,7 +92,8 @@ exports.forgetPassword = catchAsyncErrors(async(req,res,next)=>{
        // now this will fill to new entitiy in user schema named resetPasswordToken & resetPasswordExpire now time to save it
        await user.save({validateBeforeSave:false});
        // genrate a link 
-       const resetPasswordUrl = `${req.protocol}://${req.get("host")}/api/v1/password/reset/${resetToken}` ;
+       // slight updation when we deploy it on live server
+       const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}` ;  // req.protocol}://${req.get("host") , /api/v1
       // message for user
       const message = `Your Password Reset Token Is :- \n\n ${resetPasswordUrl} \n if you are not requested it then please ignore it`;
 
@@ -185,14 +186,32 @@ exports.updatePassword = catchAsyncErrors(async(req,res,next)=>{
 
 // update user profile
 exports.updateProfile = catchAsyncErrors(async(req,res,next)=>{
-      const newUser = {
+      const newUserData = {
           name:req.body.name,
           email:req.body.email
       }
 
-      // for avatar we will cloudenary later
+      // for avatar we use cloudenary 
+      if (req.body.avatar !== "") {
+        const user = await User.findById(req.user.id);
+    
+        const imageId = user.avatar.public_id;
+    
+        await cloudinary.v2.uploader.destroy(imageId);
+    
+        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+          folder: "avatars",
+          width: 150,
+          crop: "scale",
+        });
+    
+        newUserData.avatar = {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        };
+      }
 
-      const user = await User.findByIdAndUpdate(req.user.id,newUser,{
+      const user = await User.findByIdAndUpdate(req.user.id,newUserData,{
         new:true,
         runValidators:true,
         useFindAndModify:false

@@ -64,10 +64,10 @@ const ProductDetails = ({ match }) => {
   };
 
 
-  // const addToCartHandler = () => {
-  //   dispatch(addItemsToCart(match.params.id, quantity));
-  //   alert.success("Item Added To Cart");
-  // };
+  const addToCartHandler = () => {
+    // dispatch(addItemsToCart(match.params.id, quantity));
+    alert.success("Item Added To Cart");
+  };
 
   // const submitReviewToggle = () => {
   //   open ? setOpen(false) : setOpen(true);
@@ -151,13 +151,13 @@ const ProductDetails = ({ match }) => {
                 <h1>{`₹${product.price}`}</h1>
                 <div className="detailsBlock-3-1">
                   <div className="detailsBlock-3-1-1">
-                    {/* <button onClick={decreaseQuantity}>-</button>
+                    <button onClick={decreaseQuantity}>-</button>
                     <input readOnly type="number" value={quantity} />
-                    <button onClick={increaseQuantity}>+</button> */}
+                    <button onClick={increaseQuantity}>+</button>
                   </div>
                   <button
                     disabled={product.Stock < 1 ? true : false}
-                    // onClick={addToCartHandler}
+                    onClick={addToCartHandler}
                   >
                     Add to Cart
                   </button>
