@@ -34,6 +34,14 @@ import Dashboard from "./component/Admin/Dashboard.js";
 import ProductList from "./component/Admin/ProductList.js";
 import NewProduct from "./component/Admin/NewProduct";
 import UpdateProduct from "./component/Admin/UpdateProduct";
+import OrderList from "./component/Admin/OrderList";
+import ProcessOrder from "./component/Admin/ProcessOrder";
+import UsersList from "./component/Admin/UsersList";
+import UpdateUser from "./component/Admin/UpdateUser";
+import ProductReviews from "./component/Admin/ProductReviews";
+import Contact from "./component/layout/Contact/Contact";
+// import About from "./component/layout/About/About";
+import NotFound from "./component/layout/Not Found/NotFound";
 function App() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
 
@@ -45,60 +53,71 @@ function App() {
     setStripeApiKey(data.stripeApiKey);
   }
 
-  // for loading google fonts
   useEffect(() => {
     WebFont.load({
       google: {
         families: ["Roboto", "Droid Sans", "Chilanka"],
       },
     });
+
     store.dispatch(loadUser());
+
     getStripeApiKey();
   }, []);
 
+  window.addEventListener("contextmenu", (e) => e.preventDefault());
+
   return (
     <Router>
-      <Header/>
+      <Header />
+
       {isAuthenticated && <UserOptions user={user} />}
-      <Route exact path="/" component={Home}/>
-      <Route exact path="/product/:id" component={ProductDetails} />
-      <Route exact path="/products" component={Products} />
-      <Route exact path="/search" component={Search} />
-      <Route path="/products/:keyword" component={Products} />
-      
-      <ProtectedRoute exact path="/account" component={Profile} />
-      {/* <ProtectedRoute exact path="/me/update" component={UpdateProfile} /> */}
-      
-      <ProtectedRoute
+
+      {stripeApiKey && (
+        <Elements stripe={loadStripe(stripeApiKey)}>
+          <ProtectedRoute exact path="/process/payment" component={Payment} />
+        </Elements>
+      )}
+
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/product/:id" component={ProductDetails} />
+        <Route exact path="/products" component={Products} />
+        <Route path="/products/:keyword" component={Products} />
+
+        <Route exact path="/search" component={Search} />
+
+        <Route exact path="/contact" component={Contact} />
+
+        {/* <Route exact path="/about" component={About} /> */}
+
+        <ProtectedRoute exact path="/account" component={Profile} />
+
+        <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
+
+        <ProtectedRoute
           exact
           path="/password/update"
           component={UpdatePassword}
         />
-      <Route exact path="/password/forgot" component={ForgotPassword} />
-      <Route exact path="/password/reset/:token" component={ResetPassword} />
-      <Route exact path="/login" component={LoginSignUp} />
-      <Route exact path="/cart" component={Cart} />
-      <ProtectedRoute exact path="/shipping" component={Shipping} />
-      
 
+        <Route exact path="/password/forgot" component={ForgotPassword} />
 
-      {stripeApiKey && (
-          <Elements stripe = {loadStripe(stripeApiKey)}>
-          <ProtectedRoute exact path="/process/payment" component={Payment} />
-          </Elements>     
-      ) }
+        <Route exact path="/password/reset/:token" component={ResetPassword} />
+
+        <Route exact path="/login" component={LoginSignUp} />
+
+        <Route exact path="/cart" component={Cart} />
+
+        <ProtectedRoute exact path="/shipping" component={Shipping} />
 
         <ProtectedRoute exact path="/success" component={OrderSuccess} />
 
         <ProtectedRoute exact path="/orders" component={MyOrders} />
 
-        <Switch>
-        <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
-
         <ProtectedRoute exact path="/order/confirm" component={ConfirmOrder} />
+
         <ProtectedRoute exact path="/order/:id" component={OrderDetails} />
-        
-        </Switch>
 
         <ProtectedRoute
           isAdmin={true}
@@ -106,14 +125,12 @@ function App() {
           path="/admin/dashboard"
           component={Dashboard}
         />
-
         <ProtectedRoute
           exact
           path="/admin/products"
           isAdmin={true}
           component={ProductList}
         />
-
         <ProtectedRoute
           exact
           path="/admin/product"
@@ -127,8 +144,48 @@ function App() {
           isAdmin={true}
           component={UpdateProduct}
         />
-      
-      <Footer/>
+        <ProtectedRoute
+          exact
+          path="/admin/orders"
+          isAdmin={true}
+          component={OrderList}
+        />
+
+        <ProtectedRoute
+          exact
+          path="/admin/order/:id"
+          isAdmin={true}
+          component={ProcessOrder}
+        />
+        <ProtectedRoute
+          exact
+          path="/admin/users"
+          isAdmin={true}
+          component={UsersList}
+        />
+
+        <ProtectedRoute
+          exact
+          path="/admin/user/:id"
+          isAdmin={true}
+          component={UpdateUser}
+        />
+
+        <ProtectedRoute
+          exact
+          path="/admin/reviews"
+          isAdmin={true}
+          component={ProductReviews}
+        />
+
+        <Route
+          component={
+            window.location.pathname === "/process/payment" ? null : NotFound
+          }
+        />
+      </Switch>
+
+      <Footer />
     </Router>
   );
 }

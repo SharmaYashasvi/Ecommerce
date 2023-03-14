@@ -304,35 +304,48 @@ exports.getProductReviews = catchAsyncErrors(async(req,res,next)=>{
 });
 
 // delete review
-exports.deleteReview = catchAsyncErrors(async(req,res,next)=>{
-       const product = await Product.findById(req.query.productId);
+exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
+  const product = await Product.findById(req.query.productId);
 
-       if(!product){
-        return next(new ErrorHandler("product not found",404)); 
-      }
-      
-      // wo sare review nikal lie jinko delete nhi karna hai
-      const reviews = product.reviews.filter((rev)=> rev._id.toString() !== req.query.id.toString());
+  if (!product) {
+    return next(new ErrorHandler("Product not found", 404));
+  }
 
-      // recalculate the avg
-     let avg = 0;
-     reviews.forEach((rev)=>{ // calculate the avg
-        avg += rev.rating;
-      });
+  const reviews = product.reviews.filter(
+    (rev) => rev._id.toString() !== req.query.id.toString()
+  );
 
-      const ratings = avg / reviews.length;
+  let avg = 0;
 
-      const numOfReviews = reviews.length;
+  reviews.forEach((rev) => {
+    avg += rev.rating;
+  });
 
-      await Product.findByIdAndUpdate(req.query.productId,{
-          ratings,numOfReviews,reviews
-      },{
-        new:true,
-        runValidators:true,
-        useFindAndModify:false
-      })
+  let ratings = 0;
 
-     res.status(200).json({
-      succes:true
-     })
-})
+  if (reviews.length === 0) {
+    ratings = 0;
+  } else {
+    ratings = avg / reviews.length;
+  }
+
+  const numOfReviews = reviews.length;
+
+  await Product.findByIdAndUpdate(
+    req.query.productId,
+    {
+      reviews,
+      ratings,
+      numOfReviews,
+    },
+    {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+  });
+});
