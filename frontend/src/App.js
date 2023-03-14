@@ -1,7 +1,7 @@
 import './App.css';
 import { useEffect, useState } from "react";
 import Header from "./component/layout/Header/Header.js"
-import { BrowserRouter as Router ,Route} from 'react-router-dom';
+import { BrowserRouter as Router ,Route,Switch} from 'react-router-dom';
 import WebFont from "webfontloader";
 import React from "react";
 import Footer from './component/layout/Footer/Footer';
@@ -27,6 +27,13 @@ import axios from "axios";
 import Payment from "./component/Cart/Payment";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import OrderSuccess from "./component/Cart/OrderSuccess";
+import MyOrders from "./component/Order/MyOrders";
+import OrderDetails from "./component/Order/OrderDetails";
+import Dashboard from "./component/Admin/Dashboard.js";
+import ProductList from "./component/Admin/ProductList.js";
+import NewProduct from "./component/Admin/NewProduct";
+import UpdateProduct from "./component/Admin/UpdateProduct";
 function App() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
 
@@ -39,7 +46,7 @@ function App() {
   }
 
   // for loading google fonts
-  React.useEffect(() => {
+  useEffect(() => {
     WebFont.load({
       google: {
         families: ["Roboto", "Droid Sans", "Chilanka"],
@@ -60,7 +67,7 @@ function App() {
       <Route path="/products/:keyword" component={Products} />
       
       <ProtectedRoute exact path="/account" component={Profile} />
-      <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
+      {/* <ProtectedRoute exact path="/me/update" component={UpdateProfile} /> */}
       
       <ProtectedRoute
           exact
@@ -72,11 +79,54 @@ function App() {
       <Route exact path="/login" component={LoginSignUp} />
       <Route exact path="/cart" component={Cart} />
       <ProtectedRoute exact path="/shipping" component={Shipping} />
-      <ProtectedRoute exact path="/order/confirm" component={ConfirmOrder} />
+      
 
-      <Elements stripe = {loadStripe(stripeApiKey)}>
-      <ProtectedRoute exact path="/process/payment" component={Payment} />
-      </Elements>
+
+      {stripeApiKey && (
+          <Elements stripe = {loadStripe(stripeApiKey)}>
+          <ProtectedRoute exact path="/process/payment" component={Payment} />
+          </Elements>     
+      ) }
+
+        <ProtectedRoute exact path="/success" component={OrderSuccess} />
+
+        <ProtectedRoute exact path="/orders" component={MyOrders} />
+
+        <Switch>
+        <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
+
+        <ProtectedRoute exact path="/order/confirm" component={ConfirmOrder} />
+        <ProtectedRoute exact path="/order/:id" component={OrderDetails} />
+        
+        </Switch>
+
+        <ProtectedRoute
+          isAdmin={true}
+          exact
+          path="/admin/dashboard"
+          component={Dashboard}
+        />
+
+        <ProtectedRoute
+          exact
+          path="/admin/products"
+          isAdmin={true}
+          component={ProductList}
+        />
+
+        <ProtectedRoute
+          exact
+          path="/admin/product"
+          isAdmin={true}
+          component={NewProduct}
+        />
+
+        <ProtectedRoute
+          exact
+          path="/admin/product/:id"
+          isAdmin={true}
+          component={UpdateProduct}
+        />
       
       <Footer/>
     </Router>

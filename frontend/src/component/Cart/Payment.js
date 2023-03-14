@@ -17,12 +17,12 @@ import "./payment.css";
 import CreditCardIcon from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
-// import { createOrder, clearErrors } from "../../actions/orderAction";
+import { createOrder, clearErrors } from "../../actions/orderAction";
 
 const Payment = ({ history }) => {
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
 
-  const dispatch = useDispatch();
+   const dispatch = useDispatch();
   const alert = useAlert();
   const stripe = useStripe();
   const elements = useElements();
@@ -30,20 +30,20 @@ const Payment = ({ history }) => {
 
   const { shippingInfo, cartItems } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
-  // const { error } = useSelector((state) => state.newOrder);
+   const { error } = useSelector((state) => state.newOrder);
 
   const paymentData = {
     amount: Math.round(orderInfo.totalPrice * 100),
   };
 
-  // const order = {
-  //   shippingInfo,
-  //   orderItems: cartItems,
-  //   itemsPrice: orderInfo.subtotal,
-  //   taxPrice: orderInfo.tax,
-  //   shippingPrice: orderInfo.shippingCharges,
-  //   totalPrice: orderInfo.totalPrice,
-  // };
+  const order = {
+    shippingInfo,
+    orderItems: cartItems,
+    itemsPrice: orderInfo.subtotal,
+    taxPrice: orderInfo.tax,
+    shippingPrice: orderInfo.shippingCharges,
+    totalPrice: orderInfo.totalPrice,
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -64,8 +64,9 @@ const Payment = ({ history }) => {
 
       const client_secret = data.client_secret;
 
-      if (!stripe || !elements) return;
-
+      if (!stripe || !elements) {
+        return;
+      }
       const result = await stripe.confirmCardPayment(client_secret, {
         payment_method: {
           card: elements.getElement(CardNumberElement),
@@ -85,16 +86,15 @@ const Payment = ({ history }) => {
 
       if (result.error) {
         payBtn.current.disabled = false;
-
         alert.error(result.error.message);
       } else {
         if (result.paymentIntent.status === "succeeded") {
-          // order.paymentInfo = {
-          //   id: result.paymentIntent.id,
-          //   status: result.paymentIntent.status,
-          // };
+          order.paymentInfo = {
+            id: result.paymentIntent.id,
+            status: result.paymentIntent.status,
+          };
 
-          // dispatch(createOrder(order));
+          dispatch(createOrder(order));
 
           history.push("/success");
         } else {
@@ -102,30 +102,30 @@ const Payment = ({ history }) => {
         }
       }
     } catch (error) {
-      // payBtn.current.disabled = false;
-      // alert.error(error.response.data.message);
-      history.push("/success");
+      payBtn.current.disabled = false;
+      alert.error(error.response.data.message);
+     
     }
   };
 
-  // useEffect(() => {
-  //   if (error) {
-  //     alert.error(error);
-  //     // dispatch(clearErrors());
-  //   }
-  // }, [dispatch]);
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+       dispatch(clearErrors());
+    }
+  }, [dispatch, error, alert]);
 
   return (
     <Fragment>
       <MetaData title="Payment" />
       <CheckoutSteps activeStep={2} />
       <div className="paymentContainer">
-        <form className="paymentForm" >   
+        <form className="paymentForm" onSubmit={(e) => submitHandler(e)} >   
         
           <Typography>Card Info</Typography>
           <div>
             <CreditCardIcon />
-            <CardNumberElement className="paymentInput" onSubmit={(e) => submitHandler(e)}/>
+            <CardNumberElement className="paymentInput" />
           </div>
           <div>
             <EventIcon />

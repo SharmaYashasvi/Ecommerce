@@ -4,26 +4,25 @@ import "./ProductDetails.css";
  import { useSelector, useDispatch } from "react-redux";
  import {
    clearErrors,
-//   clearErrors,
    getProductDetails,
-//   newReview,
+   newReview,
 } from "../../actions/productAction";
  import ReviewCard from "./ReviewCard.js";
 import Loader from "../layout/Loader/Loader";
 import { useAlert } from "react-alert";
 import MetaData from "../layout/MetaData";
 import { addItemsToCart } from "../../actions/cartAction";
-// import {
-//   Dialog,
-//   DialogActions,
-//   DialogContent,
-//   DialogTitle,
-//   Button,
-// } from "@material-ui/core";
- //import { Rating } from "@material-ui/lab";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+} from "@material-ui/core";
+ import { Rating } from "@material-ui/lab";
  import ReactStars from "react-rating-stars-component";
 
-// import { NEW_REVIEW_RESET } from "../../constants/productConstants";
+ import { NEW_REVIEW_RESET } from "../../constants/productConstants";
 
 const ProductDetails = ({ match }) => {
    const dispatch = useDispatch();
@@ -33,16 +32,16 @@ const ProductDetails = ({ match }) => {
     (state) => state.productDetails
   );
 
-  // const { success, error: reviewError } = useSelector(
-  //   (state) => state.newReview
-  // );
+  const { success, error: reviewError } = useSelector(
+    (state) => state.newReview
+  );
 
-  // const options = {
-  //   size: "large",
-  //   value: product.ratings,
-  //   readOnly: true,
-  //   precision: 0.5,
-  // };
+  const options = {
+    size: "large",
+    value: product.ratings,
+    readOnly: true,
+    precision: 0.5,
+  };
 
   const [quantity, setQuantity] = useState(1);
   const [open, setOpen] = useState(false);
@@ -69,21 +68,21 @@ const ProductDetails = ({ match }) => {
     alert.success("Item Added To Cart");
   };
 
-  // const submitReviewToggle = () => {
-  //   open ? setOpen(false) : setOpen(true);
-  // };
+  const submitReviewToggle = () => {
+    open ? setOpen(false) : setOpen(true);
+  };
 
-  // const reviewSubmitHandler = () => {
-  //   const myForm = new FormData();
+  const reviewSubmitHandler = () => {
+    const myForm = new FormData();
 
-  //   myForm.set("rating", rating);
-  //   myForm.set("comment", comment);
-  //   myForm.set("productId", match.params.id);
+    myForm.set("rating", rating);
+    myForm.set("comment", comment);
+    myForm.set("productId", match.params.id);
 
-  //   dispatch(newReview(myForm));
+    dispatch(newReview(myForm));
 
-  //   setOpen(false);
-  // };
+    setOpen(false);
+  };
 
   useEffect(() => {
     if (error) {
@@ -91,27 +90,17 @@ const ProductDetails = ({ match }) => {
       dispatch(clearErrors());
     }
 
-    // if (reviewError) {
-    //   alert.error(reviewError);
-    //   dispatch(clearErrors());
-    // }
+    if (reviewError) {
+      alert.error(reviewError);
+      dispatch(clearErrors());
+    }
 
-    // if (success) {
-    //   alert.success("Review Submitted Successfully");
-    //   dispatch({ type: NEW_REVIEW_RESET });
-    // }
+    if (success) {
+      alert.success("Review Submitted Successfully");
+      dispatch({ type: NEW_REVIEW_RESET });
+    }
     dispatch(getProductDetails(match.params.id));
-  }, [dispatch, match.params.id , error , alert]);
-
-
-  const options = {
-    edit:false,
-    color: "rgba(20,20,20,01)",
-    activeColor:"tomato",
-    size: window.innerWidth < 600 ? 20 :25,
-    value: product.ratings,
-    isHalf:true
-  };
+  }, [dispatch, match.params.id , error , alert , reviewError , success]);
 
   return (
     <Fragment>
@@ -141,7 +130,7 @@ const ProductDetails = ({ match }) => {
                 <p>Product # {product._id}</p>
               </div>
               <div className="detailsBlock-2">
-                <ReactStars {...options} />
+                <Rating {...options} />
                 <span className="detailsBlock-2-span">
                   {" "}
                   ({product.numOfReviews} Reviews)
@@ -175,14 +164,15 @@ const ProductDetails = ({ match }) => {
                 Description : <p>{product.description}</p>
               </div>
 
-              {/* <button onClick={submitReviewToggle} className="submitReview">
+              
+              <button  onClick={submitReviewToggle} className="submitReview">
                 Submit Review
-              </button> */}
+              </button>
             </div>
           </div>
 
           <h3 className="reviewsHeading">REVIEWS</h3>
-          {/* <h3 className="reviewsHeading">REVIEWS</h3>
+         
 
           <Dialog
             aria-labelledby="simple-dialog-title"
@@ -209,11 +199,12 @@ const ProductDetails = ({ match }) => {
               <Button onClick={submitReviewToggle} color="secondary">
                 Cancel
               </Button>
-              <Button onClick={reviewSubmitHandler} color="primary">
+              
+              <Button onClick={reviewSubmitHandler}  color="primary">
                 Submit
               </Button>
             </DialogActions>
-          </Dialog> */}
+          </Dialog>
 
           {product.reviews && product.reviews[0] ? (
             <div className="reviews">
