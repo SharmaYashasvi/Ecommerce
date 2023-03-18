@@ -5,10 +5,9 @@ import { clearErrors, getProduct } from "../../actions/productAction";
 import Loader from "../layout/Loader/Loader";
 import ProductCard from "../Home/ProductCard";
 import Pagination from "react-js-pagination";
-// import Slider from "@material-ui/core/Slider";
-import Slider from '@material-ui/core/Slider';
- import { useAlert } from "react-alert";
- import Typography from "@material-ui/core/Typography";
+import Slider from "@material-ui/core/Slider";
+import { useAlert } from "react-alert";
+import Typography from "@material-ui/core/Typography";
 import MetaData from "../layout/MetaData";
 
 const categories = [
@@ -24,13 +23,13 @@ const categories = [
 const Products = ({ match }) => {
   const dispatch = useDispatch();
 
-   const alert = useAlert();
+  const alert = useAlert();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [price, setPrice] = useState([0, 25000]);
   const [category, setCategory] = useState("");
 
-   const [ratings, setRatings] = useState(0);
+  const [ratings, setRatings] = useState(0);
 
   const {
     products,
@@ -44,7 +43,7 @@ const Products = ({ match }) => {
   const keyword = match.params.keyword;
 
   const setCurrentPageNo = (e) => {
-        setCurrentPage(e);
+    setCurrentPage(e);
   };
 
   const priceHandler = (event, newPrice) => {
@@ -58,9 +57,8 @@ const Products = ({ match }) => {
       dispatch(clearErrors());
     }
 
-     dispatch(getProduct(keyword, currentPage, price, category, ratings));
-    
-  }, [dispatch, keyword , currentPage , price , category , ratings, alert, error]); //, currentPage, price, category, ratings, alert, error
+    dispatch(getProduct(keyword, currentPage, price, category, ratings));
+  }, [dispatch, keyword, currentPage, price, category, ratings, alert, error]);
 
   return (
     <Fragment>
@@ -79,16 +77,15 @@ const Products = ({ match }) => {
           </div>
 
           <div className="filterBox">
-            
+            <Typography>Price</Typography>
             <Slider
               value={price}
               onChange={priceHandler}
-              valueLabelDisplay="on"
+              valueLabelDisplay="auto"
               aria-labelledby="range-slider"
               min={0}
               max={25000}
             />
-            <Typography>Price</Typography>
 
             <Typography>Categories</Typography>
             <ul className="categoryBox">
@@ -117,7 +114,7 @@ const Products = ({ match }) => {
               />
             </fieldset>
           </div>
-          { resultPerPage < productsCount && (                                              //resultPerPage < count &&
+          {resultPerPage < productsCount && (
             <div className="paginationBox">
               <Pagination
                 activePage={currentPage}

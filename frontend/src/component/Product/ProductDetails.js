@@ -1,13 +1,13 @@
 import React, { Fragment, useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import "./ProductDetails.css";
- import { useSelector, useDispatch } from "react-redux";
- import {
-   clearErrors,
-   getProductDetails,
-   newReview,
+import { useSelector, useDispatch } from "react-redux";
+import {
+  clearErrors,
+  getProductDetails,
+  newReview,
 } from "../../actions/productAction";
- import ReviewCard from "./ReviewCard.js";
+import ReviewCard from "./ReviewCard.js";
 import Loader from "../layout/Loader/Loader";
 import { useAlert } from "react-alert";
 import MetaData from "../layout/MetaData";
@@ -19,14 +19,12 @@ import {
   DialogTitle,
   Button,
 } from "@material-ui/core";
- import { Rating } from "@material-ui/lab";
- import ReactStars from "react-rating-stars-component";
-
- import { NEW_REVIEW_RESET } from "../../constants/productConstants";
+import { Rating } from "@material-ui/lab";
+import { NEW_REVIEW_RESET } from "../../constants/productConstants";
 
 const ProductDetails = ({ match }) => {
-   const dispatch = useDispatch();
-   const alert = useAlert();
+  const dispatch = useDispatch();
+  const alert = useAlert();
 
   const { product, loading, error } = useSelector(
     (state) => state.productDetails
@@ -62,9 +60,8 @@ const ProductDetails = ({ match }) => {
     setQuantity(qty);
   };
 
-
   const addToCartHandler = () => {
-     dispatch(addItemsToCart(match.params.id, quantity));
+    dispatch(addItemsToCart(match.params.id, quantity));
     alert.success("Item Added To Cart");
   };
 
@@ -100,7 +97,7 @@ const ProductDetails = ({ match }) => {
       dispatch({ type: NEW_REVIEW_RESET });
     }
     dispatch(getProductDetails(match.params.id));
-  }, [dispatch, match.params.id , error , alert , reviewError , success]);
+  }, [dispatch, match.params.id, error, alert, reviewError, success]);
 
   return (
     <Fragment>
@@ -116,7 +113,7 @@ const ProductDetails = ({ match }) => {
                   product.images.map((item, i) => (
                     <img
                       className="CarouselImage"
-                      key={item.url}
+                      key={i}
                       src={item.url}
                       alt={`${i} Slide`}
                     />
@@ -164,15 +161,13 @@ const ProductDetails = ({ match }) => {
                 Description : <p>{product.description}</p>
               </div>
 
-              
-              <button  onClick={submitReviewToggle} className="submitReview">
+              <button onClick={submitReviewToggle} className="submitReview">
                 Submit Review
               </button>
             </div>
           </div>
 
           <h3 className="reviewsHeading">REVIEWS</h3>
-         
 
           <Dialog
             aria-labelledby="simple-dialog-title"
@@ -199,8 +194,7 @@ const ProductDetails = ({ match }) => {
               <Button onClick={submitReviewToggle} color="secondary">
                 Cancel
               </Button>
-              
-              <Button onClick={reviewSubmitHandler}  color="primary">
+              <Button onClick={reviewSubmitHandler} color="primary">
                 Submit
               </Button>
             </DialogActions>
