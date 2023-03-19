@@ -6,7 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node backend/server.js",
+<<<<<<< HEAD
     "dev": "nodemon backend/server.js",
+=======
+    "dev": "nodemone backend/server.js",
+>>>>>>> c0c88e9529cc576dca3b199d4e090e6c952bde30
     "build":"npm i"
   },
   "author": "",
