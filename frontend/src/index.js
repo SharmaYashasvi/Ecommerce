@@ -1,6 +1,6 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
 import { Provider } from "react-redux";
 import store from "./store";
 
@@ -13,12 +13,11 @@ const options = {
   transition: transitions.SCALE,
 };
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+ReactDOM.render(
   <Provider store={store}>
-   <AlertProvider template={AlertTemplate} {...options}>
+    <AlertProvider template={AlertTemplate} {...options}>
       <App />
     </AlertProvider>
-  </Provider>
+  </Provider>,
+  document.getElementById("root")
 );
-

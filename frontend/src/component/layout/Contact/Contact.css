@@ -17,7 +17,7 @@
 .mailBtn > button {
   text-decoration: none;
   font: 200 2vmax "Roboto";
-  cursor:  pointer;
+  cursor:pointer;
   padding: 2vmax;
 }
 

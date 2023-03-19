@@ -5,23 +5,23 @@ import { Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { Chart as ChartJS } from 'chart.js/auto'
 import { Chart }            from 'react-chartjs-2'
- import { Doughnut, Line } from "react-chartjs-2";
+import { Doughnut, Line } from "react-chartjs-2";
 import { useSelector, useDispatch } from "react-redux";
 import { getAdminProduct } from "../../actions/productAction";
- import { getAllOrders } from "../../actions/orderAction.js";
- import { getAllUsers } from "../../actions/userAction.js";
+import { getAllOrders } from "../../actions/orderAction.js";
+import { getAllUsers } from "../../actions/userAction.js";
 import MetaData from "../layout/MetaData";
 
 const Dashboard = () => {
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  const {  products } = useSelector((state) => state.products);
+  const { products } = useSelector((state) => state.products);
 
   const { orders } = useSelector((state) => state.allOrders);
 
-   const { users } = useSelector((state) => state.allUsers);
+  const { users } = useSelector((state) => state.allUsers);
 
-   let outOfStock = 0;
+  let outOfStock = 0;
 
   products &&
     products.forEach((item) => {
@@ -30,11 +30,11 @@ const Dashboard = () => {
       }
     });
 
-   useEffect(() => {
+  useEffect(() => {
     dispatch(getAdminProduct());
-     dispatch(getAllOrders());
-     dispatch(getAllUsers());
-   }, [dispatch]);
+    dispatch(getAllOrders());
+    dispatch(getAllUsers());
+  }, [dispatch]);
 
   let totalAmount = 0;
   orders &&

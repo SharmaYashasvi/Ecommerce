@@ -2,25 +2,22 @@ import React, { Fragment, useRef, useState, useEffect } from "react";
 import "./LoginSignUp.css";
 import Loader from "../layout/Loader/Loader";
 import { Link } from "react-router-dom";
- import MailOutlineIcon from "@material-ui/icons/MailOutline";
-//  import { EmailIcon, LockIcon } from '@chakra-ui/icons'
-//  import { FaUserAlt } from 'react-icons/fa';
-
- import LockOpenIcon from "@material-ui/icons/LockOpen";
- import FaceIcon from "@material-ui/icons/Face";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
+import FaceIcon from "@material-ui/icons/Face";
 import { useDispatch, useSelector } from "react-redux";
- import { clearErrors, login, register } from "../../actions/userAction";
+import { clearErrors, login, register } from "../../actions/userAction";
 import { useAlert } from "react-alert";
 
-const LoginSignUp = ({history,location}) => {
-   const dispatch = useDispatch();
-    const alert = useAlert();
+const LoginSignUp = ({ history, location }) => {
+  const dispatch = useDispatch();
+  const alert = useAlert();
 
   const { error, loading, isAuthenticated } = useSelector(
     (state) => state.user
   );
 
-   const loginTab = useRef(null);
+  const loginTab = useRef(null);
   const registerTab = useRef(null);
   const switcherTab = useRef(null);
 
@@ -36,10 +33,9 @@ const LoginSignUp = ({history,location}) => {
   const { name, email, password } = user;
 
   const [avatar, setAvatar] = useState("/Profile.png");
-   const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
+  const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
 
   const loginSubmit = (e) => {
-    
     e.preventDefault();
     dispatch(login(loginEmail, loginPassword));
   };
@@ -53,8 +49,7 @@ const LoginSignUp = ({history,location}) => {
     myForm.set("email", email);
     myForm.set("password", password);
     myForm.set("avatar", avatar);
-   
-     dispatch(register(myForm));
+    dispatch(register(myForm));
   };
 
   const registerDataChange = (e) => {
@@ -74,18 +69,18 @@ const LoginSignUp = ({history,location}) => {
     }
   };
 
-   const redirect = location.search ? location.search.split("=")[1] : "/account";
+  const redirect = location.search ? location.search.split("=")[1] : "/account";
 
   useEffect(() => {
     if (error) {
       alert.error(error);
-       dispatch(clearErrors());
+      dispatch(clearErrors());
     }
 
     if (isAuthenticated) {
       history.push(redirect);
     }
-  }, [ dispatch, error, alert, history, isAuthenticated ,redirect]);
+  }, [dispatch, error, alert, history, isAuthenticated, redirect]);
 
   const switchTabs = (e, tab) => {
     if (tab === "login") {
@@ -104,12 +99,11 @@ const LoginSignUp = ({history,location}) => {
     }
   };
 
-  
   return (
     <Fragment>
-            {loading ? (
-          <Loader />
-        ) :(
+      {loading ? (
+        <Loader />
+      ) : (
         <Fragment>
           <div className="LoginSignUpContainer">
             <div className="LoginSignUpBox">
@@ -122,25 +116,23 @@ const LoginSignUp = ({history,location}) => {
               </div>
               <form className="loginForm" ref={loginTab} onSubmit={loginSubmit}>
                 <div className="loginEmail">
-                  {/* <EmailIcon /> */}
                   <MailOutlineIcon />
                   <input
                     type="email"
                     placeholder="Email"
                     required
                     value={loginEmail}
-                     onChange={(e) => setLoginEmail(e.target.value)}
+                    onChange={(e) => setLoginEmail(e.target.value)}
                   />
                 </div>
                 <div className="loginPassword">
-                  {/* <LockIcon /> */}
                   <LockOpenIcon />
                   <input
                     type="password"
                     placeholder="Password"
                     required
                     value={loginPassword}
-                     onChange={(e) => setLoginPassword(e.target.value)}
+                    onChange={(e) => setLoginPassword(e.target.value)}
                   />
                 </div>
                 <Link to="/password/forgot">Forget Password ?</Link>
@@ -150,7 +142,7 @@ const LoginSignUp = ({history,location}) => {
                 className="signUpForm"
                 ref={registerTab}
                 encType="multipart/form-data"
-                 onSubmit={registerSubmit}
+                onSubmit={registerSubmit}
               >
                 <div className="signUpName">
                   <FaceIcon />
@@ -165,7 +157,6 @@ const LoginSignUp = ({history,location}) => {
                 </div>
                 <div className="signUpEmail">
                   <MailOutlineIcon />
-                  {/* <EmailIcon /> */}
                   <input
                     type="email"
                     placeholder="Email"
@@ -177,7 +168,6 @@ const LoginSignUp = ({history,location}) => {
                 </div>
                 <div className="signUpPassword">
                   <LockOpenIcon />
-                  {/* <LockIcon /> */}
                   <input
                     type="password"
                     placeholder="Password"
@@ -187,14 +177,14 @@ const LoginSignUp = ({history,location}) => {
                     onChange={registerDataChange}
                   />
                 </div>
-                
+
                 <div id="registerImage">
-                  <img  src={avatarPreview} alt="Avatar Preview" />  
+                  <img src={avatarPreview} alt="Avatar Preview" />
                   <input
                     type="file"
                     name="avatar"
                     accept="image/*"
-                     onChange={registerDataChange}
+                    onChange={registerDataChange}
                   />
                 </div>
                 <input type="submit" value="Register" className="signUpBtn" />

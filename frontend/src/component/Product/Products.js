@@ -37,7 +37,7 @@ const Products = ({ match }) => {
     error,
     productsCount,
     resultPerPage,
-    // filteredProductsCount,
+    filteredProductsCount,
   } = useSelector((state) => state.products);
 
   const keyword = match.params.keyword;
@@ -49,7 +49,7 @@ const Products = ({ match }) => {
   const priceHandler = (event, newPrice) => {
     setPrice(newPrice);
   };
-  // let count = filteredProductsCount;
+  let count = filteredProductsCount;
 
   useEffect(() => {
     if (error) {
@@ -114,7 +114,7 @@ const Products = ({ match }) => {
               />
             </fieldset>
           </div>
-          {resultPerPage < productsCount && (
+          {resultPerPage < count && (
             <div className="paginationBox">
               <Pagination
                 activePage={currentPage}

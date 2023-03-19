@@ -22,7 +22,7 @@ import { createOrder, clearErrors } from "../../actions/orderAction";
 const Payment = ({ history }) => {
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
 
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const alert = useAlert();
   const stripe = useStripe();
   const elements = useElements();
@@ -30,7 +30,7 @@ const Payment = ({ history }) => {
 
   const { shippingInfo, cartItems } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
-   const { error } = useSelector((state) => state.newOrder);
+  const { error } = useSelector((state) => state.newOrder);
 
   const paymentData = {
     amount: Math.round(orderInfo.totalPrice * 100),
@@ -64,9 +64,8 @@ const Payment = ({ history }) => {
 
       const client_secret = data.client_secret;
 
-      if (!stripe || !elements) {
-        return;
-      }
+      if (!stripe || !elements) return;
+
       const result = await stripe.confirmCardPayment(client_secret, {
         payment_method: {
           card: elements.getElement(CardNumberElement),
@@ -86,6 +85,7 @@ const Payment = ({ history }) => {
 
       if (result.error) {
         payBtn.current.disabled = false;
+
         alert.error(result.error.message);
       } else {
         if (result.paymentIntent.status === "succeeded") {
@@ -104,14 +104,13 @@ const Payment = ({ history }) => {
     } catch (error) {
       payBtn.current.disabled = false;
       alert.error(error.response.data.message);
-     
     }
   };
 
   useEffect(() => {
     if (error) {
       alert.error(error);
-       dispatch(clearErrors());
+      dispatch(clearErrors());
     }
   }, [dispatch, error, alert]);
 
@@ -120,8 +119,7 @@ const Payment = ({ history }) => {
       <MetaData title="Payment" />
       <CheckoutSteps activeStep={2} />
       <div className="paymentContainer">
-        <form className="paymentForm" onSubmit={(e) => submitHandler(e)} >   
-        
+        <form className="paymentForm" onSubmit={(e) => submitHandler(e)}>
           <Typography>Card Info</Typography>
           <div>
             <CreditCardIcon />
@@ -138,7 +136,7 @@ const Payment = ({ history }) => {
 
           <input
             type="submit"
-             value={`Pay - ₹${orderInfo && orderInfo.totalPrice}`}
+            value={`Pay - ₹${orderInfo && orderInfo.totalPrice}`}
             ref={payBtn}
             className="paymentFormBtn"
           />

@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
-const connectDatabase =()=>{
-    mongoose.connect(process.env.DB_URI).then(
-        (data)=>{
-            console.log(`mongodb is connected on ${data.connection.host}`)  
-        }
-    )
-    // we have no need of catch block because we handle this error in unhandled promise rejaction 
-    // .catch((err)=>{
-    //     console.log(err);
-    //   }
-    //  )
-}
+
+const connectDatabase = () => {
+  mongoose
+    .connect(process.env.DB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+    })
+    .then((data) => {
+      console.log(`Mongodb connected with server: ${data.connection.host}`);
+    });
+};
 
 module.exports = connectDatabase;
