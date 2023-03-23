@@ -9,4 +9,5 @@ Make Sure to Create a config.env file in backend/config directory and add approp
 
 Essential Variables PORT= DB_URI = STRIPE_API_KEY= STRIPE_SECRET_KEY= JWT_SECRET= JWT_EXPIRE= COOKIE_EXPIRE= SMPT_SERVICE = SMPT_MAIL= SMPT_PASSWORD= SMPT_HOST= SMPT_PORT= CLOUDINARY_NAME CLOUDINARY_API_KEY CLOUDINARY_API_SECRET fill each filed with your info respectively
 
-on deployment part i deployed backend on ONRENDER and add build folder in backend folder .
+on deployment part i deployed backend on ONRENDER and add build folder of frontend in backend folder so we have no need to 
+deploy frontend separately.
